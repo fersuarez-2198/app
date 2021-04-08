@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Personaje</title>
+</head>
+
+<body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.7/dat.gui.js"
+        integrity="sha512-u+vtyZDzyd0zgAEffKfoNx2BnCahAOBBYvzGu6vma1B18zQ6lEGF3F6dAFvqaxDoIU/GZRxcXV5oq23OIrkQwg=="
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/94/three.min.js"
+        integrity="sha512-ZGgXd6TB5qjtvTU6Q5o/LJM4pwLNy8U8XXJh+vJZDXp2wC8ASrl4WOeivaq2fpYc3TnTCLzyDvVjY8YhvNYaXg=="
+        crossorigin="anonymous"></script>
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stats.js/r16/Stats.js"></script>
+    <div id="myStats"></div>
+    <script>
+        var camera, scene, renderer;
+        var geometry, material, mesh;
+        var cabezaGeometria, cabezaMaterial, cabezaMesh;
+        var hombrosGeometria, hombrosMaterial, hombrosMesh;
+        var brazoGeometria, brazoMaterial, brazoMesh;
+        let homero = new THREE.Object3D();
+
+        init();
+        animate();
+
+        function init() {
+            camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.01, 10);
+            camera.position.z = 4;
+            camera.position.y = 1;
+            scene = new THREE.Scene();
+
+            //cabeza
+            cabezaGeometria = new THREE.SphereGeometry(0.25, 40, 5);
+            cabezaMaterial = new THREE.MeshBasicMaterial({ color: 0xffff00 });
+            cabezaMesh = new THREE.Mesh(cabezaGeometria, cabezaMaterial);
+            scene.add(cabezaMesh);
+            cabezaMesh.position.y = 2.15;
+
+            //barba
+            cabezaGeometria = new THREE.CylinderGeometry(0.07, 0.15, 0.15);
+            cabezaMaterial = new THREE.MeshBasicMaterial({ color: 0xe1c699 });
+            cabezaMesh = new THREE.Mesh(cabezaGeometria, cabezaMaterial);
+            scene.add(cabezaMesh);
+            cabezaMesh.position.y = 1.95;
+            cabezaMesh.position.z = 0.5;
+
+            //cabello
+            cabezaGeometria = new THREE.TorusGeometry(0.05, 0.0025, 16, 100);
+            cabezaMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 });
+            cabezaMesh = new THREE.Mesh(cabezaGeometria, cabezaMaterial);
+            scene.add(cabezaMesh);
+            cabezaMesh.position.y = 2.4;
+
+            //cuello
+            cabezaGeometria = new THREE.ConeGeometry(0.125, 0.08, 0.2);
+            cabezaMaterial = new THREE.MeshBasicMaterial({ color: 0xffff00 });
+            cabezaMesh = new THREE.Mesh(cabezaGeometria, cabezaMaterial);
+            scene.add(cabezaMesh);
+            cabezaMesh.position.y = 1.85;
+            cabezaMesh.rotateX(49000);
+            cabezaMesh.position.x= 0;
+            cabezaMesh.position.z= 0.25;
+
+            //hombros
+            hombrosGeometria = new THREE.BoxGeometry(0.85, 0.1, 0.2)
+            hombrosMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
+            hombrosMesh = new THREE.Mesh(hombrosGeometria, hombrosMaterial);
+            scene.add(hombrosMesh);
+            hombrosMesh.position.y = 1.9;
+
+            //brazo1
+            brazoGeometria = new THREE.BoxGeometry(0.15, 0.6, 0.2)
+            brazoMaterial = new THREE.MeshBasicMaterial({ color: 0xffff00 });
+            brazoMesh = new THREE.Mesh(brazoGeometria, brazoMaterial);
+            scene.add(brazoMesh);
+            brazoMesh.position.y = 1.6;
+            brazoMesh.position.x = 0.35;
+
+            //brazo2
+            brazoGeometria = new THREE.BoxGeometry(0.15, 0.6, 0.2)
+            brazoMaterial = new THREE.MeshBasicMaterial({ color: 0xffff00 });
+            brazoMesh = new THREE.Mesh(brazoGeometria, brazoMaterial);
+            scene.add(brazoMesh);
+            brazoMesh.position.y = 1.6;
+            brazoMesh.position.x = -0.35;
+
+            //rosquilla
+            rosquillaGeometria = new THREE.TorusGeometry(0.05, 0.025, 16, 100);
+            rosquillaMaterial = new THREE.MeshNormalMaterial({ color: 0xf2db01 });
+            rosquillaMesh = new THREE.Mesh(rosquillaGeometria, rosquillaMaterial);
+            scene.add(rosquillaMesh);
+            rosquillaMesh.position.y = 1.25;
+            rosquillaMesh.position.x = 0.35;;
+
+            //manga1
+            mangaGeometria = new THREE.BoxGeometry(0.15, 0.15, 0.2)
+            mangaMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
+            mangaMesh = new THREE.Mesh(mangaGeometria, mangaMaterial);
+            scene.add(mangaMesh);
+            mangaMesh.position.y = 1.85;
+            mangaMesh.position.x = -0.35;
+
+            //manga2
+            mangaGeometria = new THREE.BoxGeometry(0.15, 0.15, 0.2)
+            mangaMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
+            mangaMesh = new THREE.Mesh(mangaGeometria, mangaMaterial);
+            scene.add(mangaMesh);
+            mangaMesh.position.y = 1.85;
+            mangaMesh.position.x = 0.35;
+
+            //cerveza
+            cervezaGeometria = new THREE.BoxGeometry(0.14, 0.2, 0.2)
+            cervezaMaterial = new THREE.MeshBasicMaterial({ color: 0x73400d });
+            cervezaMesh = new THREE.Mesh(cervezaGeometria, cervezaMaterial);
+            scene.add(cervezaMesh);
+            cervezaMesh.position.y = 1.25;
+            cervezaMesh.position.x = -0.37;
+
+            //etiqueta cerveza
+            cervezaGeometria = new THREE.BoxGeometry(0.15, 0.07, 0.2)
+            cervezaMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
+            cervezaMesh = new THREE.Mesh(cervezaGeometria, cervezaMaterial);
+            scene.add(cervezaMesh);
+            cervezaMesh.position.y = 1.25;
+            cervezaMesh.position.x = -0.37;
+
+            //busto
+            brazoGeometria = new THREE.BoxGeometry(0.45, 0.15, 0.2)
+            brazoMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
+            brazoMesh = new THREE.Mesh(brazoGeometria, brazoMaterial);
+            scene.add(brazoMesh);
+            brazoMesh.position.y = 1.75;
+
+            //panza
+            brazoGeometria = new THREE.SphereGeometry(0.3, 1000, 10);
+            brazoMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
+            troncoMesh = new THREE.Mesh(brazoGeometria, brazoMaterial);
+            scene.add(troncoMesh);
+            troncoMesh.position.y = 1.52;
+
+            // sombra panza
+            brazoGeometria = new THREE.SphereGeometry(0.3, 100, 0);
+            brazoMaterial = new THREE.MeshBasicMaterial({ color: 0x0b72b5 });
+            troncoMesh = new THREE.Mesh(brazoGeometria, brazoMaterial);
+            scene.add(troncoMesh);
+            troncoMesh.position.y = 1.4;
+
+            //cinturon
+            brazoGeometria = new THREE.BoxGeometry(0.43, 0.01, 0.25)
+            brazoMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 });
+            brazoMesh = new THREE.Mesh(brazoGeometria, brazoMaterial);
+            scene.add(brazoMesh);
+            brazoMesh.position.y = 1.33;
+            brazoMesh.position.z = 1;
+
+            homero.add(crearPiernas());
+            scene.add(homero);
+
+
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.body.appendChild(renderer.domElement);
+
+            //fondo
+            fondoGeometria = new THREE.BoxGeometry(2, 3, 0.1)
+            fondoMaterial = new THREE.MeshBasicMaterial({ color: 0xc3c3c3 });
+            fondoMesh = new THREE.Mesh(fondoGeometria, fondoMaterial);
+            scene.add(fondoMesh);
+            fondoMesh.position.z = -0.55;
+            fondoMesh.position.y = 1.3;
+
+        }
+        function animate() {
+            requestAnimationFrame(animate);
+            renderer.render(scene, camera);
+        }
+
+        function crearPiernas() {
+            let piernas = new THREE.Object3D();
+
+            //pierna1
+            brazoGeometria = new THREE.BoxGeometry(0.2, 0.8, 0.15)
+            brazoMaterial = new THREE.MeshBasicMaterial({ color: 0x0b72b5 });
+            brazoMesh = new THREE.Mesh(brazoGeometria, brazoMaterial);
+            brazoMesh.position.y = 0.85;
+            brazoMesh.position.x = 0.16;
+            piernas.add(brazoMesh);
+
+            //zapato1
+            brazoGeometria = new THREE.ConeGeometry(0.16, 0.35, 0.15)
+            brazoMaterial = new THREE.MeshBasicMaterial({ color: 0x474b4e });
+            brazoMesh = new THREE.Mesh(brazoGeometria, brazoMaterial);
+            brazoMesh.position.y = 0.55;
+            brazoMesh.position.x = 0.16;
+            piernas.add(brazoMesh);
+
+            //pierna2
+            brazoGeometria = new THREE.BoxGeometry(0.2, 0.8, 0.15)
+            brazoMaterial = new THREE.MeshBasicMaterial({ color: 0x0b72b5 });
+            brazoMesh = new THREE.Mesh(brazoGeometria, brazoMaterial);
+            brazoMesh.position.y = 0.85;
+            brazoMesh.position.x = -0.16;
+            piernas.add(brazoMesh);
+
+            //zapato2
+            brazoGeometria = new THREE.ConeGeometry(0.16, 0.35, 0.15)
+            brazoMaterial = new THREE.MeshBasicMaterial({ color: 0x474b4e });
+            brazoMesh = new THREE.Mesh(brazoGeometria, brazoMaterial);
+            brazoMesh.position.y = 0.55;
+            brazoMesh.position.x = -0.16;
+            piernas.add(brazoMesh);
+
+            return piernas;
+        }
+    </script>
+</body>
+
+</html>
